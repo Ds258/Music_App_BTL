@@ -2,8 +2,11 @@ package com.example.music_app_btl;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -51,17 +54,17 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<File> arrayList = new ArrayList<>();
 
         File[] files = file.listFiles();
-
-        for(File singlefile:files){
-            if(singlefile.isDirectory() && !singlefile.isHidden()){
-                arrayList.addAll(findSong(singlefile));
-            } else {
-                if(singlefile.getName().endsWith(".mp3") || singlefile.getName().endsWith(".wav")){
-                    arrayList.add(singlefile);
+        if(files!=null) {
+            for (File singlefile : files) {
+                if (singlefile.isDirectory() && !singlefile.isHidden()) {
+                    arrayList.addAll(findSong(singlefile));
+                } else {
+                    if (singlefile.getName().endsWith(".mp3") || singlefile.getName().endsWith(".wav")) {
+                        arrayList.add(singlefile);
+                    }
                 }
             }
         }
-
         return arrayList;
     }
 
@@ -74,5 +77,15 @@ public class MainActivity extends AppCompatActivity {
         }
         ArrayAdapter<String> myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
         listView.setAdapter(myAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String songname=(String) listView.getItemAtPosition(i);
+                startActivity(new Intent(getApplicationContext(),player_activity.class)
+                        .putExtra("songs",mySongs)
+                        .putExtra("songname",songname)
+                        .putExtra("pos",i));
+            }
+        });
     }
 }
