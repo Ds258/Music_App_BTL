@@ -6,9 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -75,8 +78,10 @@ public class MainActivity extends AppCompatActivity {
             items[i] = mySongs.get(i).getName().toString().replace(".mp3", "").replace(".wav", "");
 
         }
-        ArrayAdapter<String> myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
-        listView.setAdapter(myAdapter);
+        //ArrayAdapter<String> myAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, items);
+        //listView.setAdapter(myAdapter);
+        customAdapter customAdapter = new customAdapter();
+        listView.setAdapter(customAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -87,5 +92,32 @@ public class MainActivity extends AppCompatActivity {
                         .putExtra("pos",i));
             }
         });
+    }
+
+    class customAdapter extends BaseAdapter{
+
+        @Override
+        public int getCount() {
+            return items.length;
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return null;
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View myView = getLayoutInflater().inflate(R.layout.list_song, null);
+            TextView textsong = myView.findViewById(R.id.txtsongname);
+            textsong.setSelected(true);
+            textsong.setText(items[position]);
+            return myView;
+        }
     }
 }
